@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-function Square(props) {
+const col =20;
+const row =20;
+function Square(props) { // 컴포넌트는 항상 대문자로 시작해야한다 ! 아니면 tag로 인식을 해버린다.
     //controlled components. 
     return (// 버튼의 value를 보여지는 값으로 설정
         <button className="square" onClick={props.onClick}>
@@ -12,19 +14,6 @@ function Square(props) {
 }
 
 class Board extends React.Component{
-    /*
-    constructor(props)
-    {
-        super(props);//하위 클래스의 생성자를 정의할 때 항상 super를 호출 해야한다. 
-        // 상위 클래스의 생성자를 사용하는 것? 
-        this.state ={
-            squares: Array(9).fill(null),
-            xIsNext: true,
-        };
-    }
-    */
-    
-
     renderSquare(i)
     {//Square의 value를 전달
         return (
@@ -35,36 +24,22 @@ class Board extends React.Component{
     }
 
     render(){
-        /*
-        const winner = calculateWinner(this.state.squares);
 
-        let status;
-        if (winner){
-            status='Winner : '+winner;
-        }
-        else
+        let table = []
+       
+        // Outer loop to create parent
+        for (let i = 0; i < row; i++) 
         {
-            status = 'Next Player: ' + (this.state.xIsNext ? 'X' : 'O');
+          let children = []
+          for (let j = 0; j < col; j++) 
+          {
+                children.push(this.renderSquare(i*col+j))
+          }
+          table.push(<div className="board-row">{children}</div>)
         }
-        */
-
         return (
             <div>
-                <div className="board-row">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(3)}
-                    {this.renderSquare(4)}
-                    {this.renderSquare(5)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(6)}
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
-                </div>
+                {table}
             </div>
         );
     }
@@ -75,7 +50,7 @@ class Game extends React.Component{
         super(props);
         this.state ={
             history:[{
-                squares: Array(9).fill(null),
+                squares: Array(col*row).fill(null),
             }],
             stepNumber: 0,
             xIsNext: true,
@@ -97,6 +72,7 @@ class Game extends React.Component{
         }
 
         squares[i]=this.state.xIsNext? 'X' : 'O';
+        
         this.setState({
             history: history.concat([{
                 squares: squares,
@@ -121,7 +97,7 @@ class Game extends React.Component{
 
         const moves = history.map((step, move) => {
             const desc = move ?
-            'Go to move #' + move:
+            'Go to move #' + move +' - ' + this.state.stepNumber/col + '  '+this.state.stepNumber%col :
             'Go to game start';
             return (
                 <li key={move}>
@@ -129,8 +105,6 @@ class Game extends React.Component{
                 </li>
             );
         });
-
-
         let status;
         if (winner){
             status='Winner : '+winner;
@@ -139,9 +113,9 @@ class Game extends React.Component{
         {
             status = 'Next Player: ' + (this.state.xIsNext ? 'X' : 'O');
         }
-
-
+        
         return (
+            // JSX 문법
             <div className="game">
                 <div className="game-board">
                     <Board 
@@ -160,7 +134,7 @@ class Game extends React.Component{
 
 ReactDOM.render(
     <Game />,
-    document.getElementById('root')
+    document.getElementById('root')// element를 root DOM노드에 렌더링
 );
 
 function calculateWinner(squares) {
