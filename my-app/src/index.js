@@ -172,9 +172,9 @@ function calculateWinner(squares, next) {
         }
     }
 
-    for( let i =0; i<row-4;++i)
+    for( let i =0; i<row;++i)
     {
-        for( let j=0;j<col;++j)
+        for( let j=0;j<col-4;++j)
         {
             if(squares[i*col+j] ===player && squares[i*col+j+1] ===player  && squares[i*col+j+2] ===player  
             && squares[i*col+j+3] ===player && squares[i*col+j+4] ===player )
