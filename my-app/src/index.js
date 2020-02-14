@@ -72,6 +72,7 @@ class Game extends React.Component{
         }
 
         squares[i]=this.state.xIsNext? 'X' : 'O';
+        //squares[i]=i;
         
         this.setState({
             history: history.concat([{
@@ -93,8 +94,7 @@ class Game extends React.Component{
     render(){
         const history = this.state.history;
         const current =history[this.state.stepNumber];
-        const winner =calculateWinner(current.squares);
-
+        const winner =calculateWinner(current.squares, this.state.xIsNext);
         const moves = history.map((step, move) => {
             const desc = move ?
             'Go to move #' + move +' - ' + this.state.stepNumber/col + '  '+this.state.stepNumber%col :
@@ -137,7 +137,7 @@ ReactDOM.render(
     document.getElementById('root')// element를 root DOM노드에 렌더링
 );
 
-function calculateWinner(squares) {
+function calculateWinner(squares, next) {
     const lines = [
       [0, 1, 2],
       [3, 4, 5],
@@ -148,11 +148,71 @@ function calculateWinner(squares) {
       [0, 4, 8],
       [2, 4, 6],
     ];
+    /*
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
       if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
         return squares[a];
       }
+    }*/
+    var player = next? 'O' : 'X';
+    
+    console.log(player+'__');
+
+    for( let i =0; i<row-4;++i)
+    {
+        for( let j=0;j<col;++j)
+        {
+            if(squares[i*col+j] ===player && squares[(i+1)*col+j] ===player  && squares[(i+2)*col+j] ===player  
+            && squares[(i+3)*col+j] ===player && squares[(i+4)*col+j] ===player )
+            {
+                console.log('somebody win ');
+                return player;
+            }
+        }
     }
+
+    for( let i =0; i<row-4;++i)
+    {
+        for( let j=0;j<col;++j)
+        {
+            if(squares[i*col+j] ===player && squares[i*col+j+1] ===player  && squares[i*col+j+2] ===player  
+            && squares[i*col+j+3] ===player && squares[i*col+j+4] ===player )
+            {
+                console.log('somebody win ');
+                return player;
+            }
+        }
+    }
+
+    for( let i =0; i<row-4;++i)
+    {
+        for( let j=0;j<col-4;++j)
+        {
+            if(squares[i*col+j] ===player && squares[(i+1)*col+j+1] ===player  && squares[(i+2)*col+j+2] ===player  
+            && squares[(i+3)*col+j+3] ===player && squares[(i+4)*col+j+4] ===player )
+            {
+                console.log('somebody win ');
+                return player;
+            }
+        }
+    }
+
+    for( let i =0; i<row-4;++i)
+    {
+        for( let j=0;j<col-4;++j)
+        {
+            if(squares[(row-i-1)*col+j] ===player && squares[(row-i-2)*col+j+1] ===player  && squares[(row-i-3)*col+j+2] ===player  
+            && squares[(row-i-4)*col+j+3] ===player && squares[(row-i-5)*col+j+4] ===player )
+            {
+                console.log('somebody win ');
+                return player;
+            }
+        }
+    }
+
+
+
+
     return null;
   }
